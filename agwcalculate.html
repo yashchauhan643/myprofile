@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aman Gypsum World - Official Billing System</title>
+    <style>
+        :root {
+            --bg: #f4efe5;
+            --ink: #1e2b3a;
+            --muted: #61717f;
+            --surface: #ffffff;
+            --surface-2: #f9fbfd;
+            --brand: #0d6c9f;
+            --brand-2: #13498a;
+            --accent: #1f9e5b;
+            --line: #d7e0e7;
+            --radius: 14px;
+            --shadow: 0 18px 40px rgba(17, 34, 51, 0.12);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: "Trebuchet MS", "Segoe UI", Tahoma, sans-serif;
+            background:
+                radial-gradient(circle at 5% 5%, #d6e9f9 0%, transparent 35%),
+                radial-gradient(circle at 95% 8%, #ffe8c3 0%, transparent 34%),
+                linear-gradient(145deg, #f8f4ec 0%, #e9f4fb 100%);
+            color: var(--ink);
+            margin: 0;
+            padding: 20px 12px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 980px;
+            margin: 0 auto;
+            background: var(--surface);
+            padding: 26px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+        h1, h2, h3 { text-align: center; color: var(--ink); margin: 0; }
+        h1 { font-size: clamp(1.4rem, 2.6vw, 2rem); margin-bottom: 6px; letter-spacing: 0.2px; }
+        .subtitle {
+            text-align: center;
+            color: var(--muted);
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+        
+        /* Tabs Styling */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 24px;
+            border: 1px solid var(--line);
+            background: var(--surface-2);
+            border-radius: 999px;
+            padding: 6px;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 10px 14px;
+            font-size: 15px;
+            font-weight: bold;
+            color: var(--muted);
+            cursor: pointer;
+            transition: 0.25s ease;
+            flex: 1;
+            text-align: center;
+            white-space: nowrap;
+            border-radius: 999px;
+            min-height: 44px;
+        }
+        .tab-btn.active {
+            color: #fff;
+            background: linear-gradient(115deg, var(--brand), var(--brand-2));
+            box-shadow: 0 8px 20px rgba(13, 108, 159, 0.25);
+        }
+        .tab-btn:hover { color: var(--ink); }
+
+        /* Form Layout */
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: 700; margin-bottom: 6px; font-size: 13px; color: #243447; }
+        input[type="text"], input[type="number"], input[type="date"], select {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            font-size: 15px;
+            background-color: #fff;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        input:focus, select:focus {
+            border-color: var(--brand);
+            box-shadow: 0 0 0 4px rgba(13, 108, 159, 0.16);
+            outline: none;
+        }
+        .row { display: flex; gap: 15px; flex-wrap: wrap; }
+        .row .form-group { flex: 1; min-width: 180px; }
+        
+        .section-title {
+            margin-top: 24px;
+            margin-bottom: 12px;
+            padding-bottom: 7px;
+            border-bottom: 2px solid #b9d6e6;
+            color: var(--brand-2);
+            font-size: 17px;
+            font-weight: 800;
+            letter-spacing: 0.2px;
+        }
+
+        .stats-grid {
+            display: grid;
+            gap: 10px;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            margin-top: 8px;
+        }
+        .stat-card {
+            background: linear-gradient(170deg, #f4f9ff, #eff7fa);
+            border: 1px solid #d7e6f0;
+            border-radius: 12px;
+            padding: 10px 12px;
+            min-height: 76px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 4px;
+        }
+        .stat-card span {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--muted);
+            font-weight: 700;
+        }
+        .stat-card strong {
+            font-size: 1.1rem;
+            color: var(--ink);
+        }
+        .area-breakdown {
+            margin-top: 8px;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 700;
+        }
+        
+        /* Buttons */
+        .btn-group { display: flex; gap: 10px; margin-top: 24px; }
+        .action-btn {
+            flex: 1;
+            background: linear-gradient(120deg, var(--brand), var(--brand-2));
+            color: white;
+            padding: 13px;
+            border: none;
+            border-radius: 11px;
+            font-size: 15px;
+            cursor: pointer;
+            font-weight: 800;
+            transition: transform 0.2s ease, box-shadow 0.25s ease;
+            min-height: 46px;
+        }
+        .action-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 16px rgba(16, 74, 121, 0.25); }
+        .print-btn { background: linear-gradient(120deg, #1b8a52, var(--accent)); display: none; }
+
+        /* PROPER INVOICE DESIGN */
+        .invoice-box {
+            margin-top: 34px;
+            padding: 26px;
+            border: 1px solid var(--line);
+            background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(247,250,253,0.96));
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+            display: none;
+            border-radius: 14px;
+            position: relative;
+            overflow: hidden;
+        }
+        .invoice-box::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: url("Screenshot 2026-04-26 174934.png");
+            background-repeat: no-repeat;
+            background-position: center 120px;
+            background-size: min(620px, 90%);
+            opacity: 0.06;
+            pointer-events: none;
+        }
+        .invoice-content {
+            position: relative;
+            z-index: 1;
+        }
+        .inv-header { text-align: center; border-bottom: 2px solid #2c3e50; padding-bottom: 15px; margin-bottom: 20px; }
+        .inv-brand {
+            display: block;
+            width: min(560px, 92%);
+            max-height: 120px;
+            object-fit: contain;
+            margin: 0 auto 10px;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.08));
+        }
+        .inv-header h1 { font-size: 26px; color: #000; text-transform: uppercase; }
+        .inv-header p { margin: 5px 0 0; color: #555; font-size: 14px; }
+        
+        .inv-details { display: flex; justify-content: space-between; margin-bottom: 25px; font-size: 14px; }
+        .inv-details div { width: 48%; }
+        .inv-details strong { color: #000; }
+        
+        .inv-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        .inv-table th, .inv-table td { padding: 10px; border: 1px solid #bdc3c7; text-align: left; font-size: 14px; color: #000; }
+        .inv-table th { background-color: #ecf0f1; font-weight: bold; text-align: center; }
+        .inv-table td.num { text-align: right; }
+        .inv-table .total-row th { text-align: right; font-size: 16px; }
+        .inv-table .total-row td { font-size: 18px; font-weight: bold; background: #ecf0f1; text-align: right; }
+
+        .inv-footer { margin-top: 32px; display: flex; justify-content: space-between; font-size: 13px; color: #555; gap: 16px; }
+        .inv-sign { text-align: center; margin-top: 20px; border-top: 1px solid #000; padding-top: 5px; width: 200px; }
+
+        /* Price List Viewer Table */
+        .search-bar { margin-bottom: 16px; }
+        .table-wrapper { max-height: 60vh; overflow-y: auto; overflow-x: auto; border: 1px solid #bdc3c7; }
+        .viewer-table { width: 100%; border-collapse: collapse; background: #fff; min-width: 500px; }
+        .viewer-table th, .viewer-table td { padding: 10px; text-align: left; border-bottom: 1px solid #bdc3c7; }
+        .viewer-table th { background-color: #bdc3c7; position: sticky; top: 0; z-index: 1; }
+        .category-badge { background:#ecf0f1; padding:4px 8px; border-radius:10px; font-size:12px; font-weight: bold; color: #34495e; }
+
+        /* Print Specific CSS */
+        @media print {
+            body { background: #fff; padding: 0; margin: 0; }
+            .container { box-shadow: none; border: none; padding: 0; max-width: 100%; }
+            #calcSection, .tabs, .subtitle, h1.main-title { display: none !important; }
+            .invoice-box { display: block !important; border: none; padding: 0; margin: 0; box-shadow: none; }
+            .btn-group { display: none !important; }
+        }
+
+        @media (max-width: 860px) {
+            .container { padding: 20px 16px; border-radius: 16px; }
+            .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .btn-group { flex-wrap: wrap; }
+            .action-btn { min-width: 180px; }
+        }
+
+        @media (max-width: 640px) {
+            body { padding: 12px 8px; }
+            .container { padding: 14px 12px; }
+            .tab-btn { font-size: 14px; flex: 1 1 100%; }
+            .row { gap: 10px; }
+            .row .form-group { min-width: 100%; }
+            .section-title { font-size: 15px; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .stat-card { min-height: 70px; }
+            .inv-details { flex-direction: column; gap: 14px; }
+            .inv-details div, .inv-details div[style] { width: 100%; text-align: left !important; }
+            .invoice-box { padding: 12px; margin-top: 22px; }
+            .inv-table th, .inv-table td { padding: 6px 5px; font-size: 11px; }
+            .inv-table .total-row th { font-size: 13px; }
+            .inv-table .total-row td { font-size: 14px; }
+            .inv-footer { flex-direction: column; }
+            .inv-sign { width: 160px; }
+            .btn-group {
+                position: sticky;
+                bottom: 8px;
+                z-index: 10;
+                background: rgba(255, 255, 255, 0.92);
+                padding: 8px;
+                border: 1px solid #dce5ee;
+                border-radius: 12px;
+                backdrop-filter: blur(6px);
+            }
+            .action-btn { font-size: 14px; min-height: 44px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 class="main-title">Aman Gypsum World</h1>
+    <div class="subtitle">Ahmedabad - Quotation & Billing System</div>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('calc')" id="tabCalc">Generate Bill</button>
+        <button class="tab-btn" onclick="switchTab('price')" id="tabPrice">Full Price List Inventory</button>
+    </div>
+
+    <div id="calcSection">
+        <div class="section-title">1. Customer Details</div>
+        <div class="row">
+            <div class="form-group">
+                <label>Customer Name</label>
+                <input type="text" id="custName" placeholder="Enter Customer Name">
+            </div>
+            <div class="form-group">
+                <label>Contact Number</label>
+                <input type="text" id="custPhone" placeholder="Enter Phone No." inputmode="tel">
+            </div>
+            <div class="form-group">
+                <label>Date</label>
+                <input type="date" id="billDate">
+            </div>
+        </div>
+
+        <div class="section-title">2. Site Dimensions & Wastage</div>
+        <div class="row" id="singleDimensionsRow">
+            <div class="form-group">
+                <label>Length (Feet)</label>
+                <input type="number" id="length" placeholder="12" min="1" step="0.01">
+            </div>
+            <div class="form-group">
+                <label>Width (Feet)</label>
+                <input type="number" id="width" placeholder="10" min="1" step="0.01">
+            </div>
+        </div>
+        <div id="bothDimensionsRow" style="display: none;">
+            <div class="row">
+                <div class="form-group">
+                    <label>Board Length (Feet)</label>
+                    <input type="number" id="boardLength" placeholder="12" min="1" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Board Width (Feet)</label>
+                    <input type="number" id="boardWidth" placeholder="10" min="1" step="0.01">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <label>Wastage (%)</label>
+                <input type="number" id="wastage" value="5" min="0">
+            </div>
+            <div class="form-group">
+                <label>Total Area (Sq.Ft)</label>
+                <input type="number" id="totalArea" readonly style="background-color: #e8f0fe; font-weight: bold;">
+            </div>
+        </div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span>Net Area</span>
+                <strong id="areaStat">0 Sq.Ft</strong>
+            </div>
+            <div class="stat-card">
+                <span>Perimeter</span>
+                <strong id="periStat">0 Ft</strong>
+            </div>
+            <div class="stat-card">
+                <span>Area With Wastage</span>
+                <strong id="effectiveAreaStat">0 Sq.Ft</strong>
+            </div>
+        </div>
+        <div class="area-breakdown" id="areaBreakdown"></div>
+
+        <div class="section-title">3. Material Selection</div>
+        <div class="row">
+            <div class="form-group">
+                <label>Ceiling Type</label>
+                <select id="ceilingType" onchange="updateMaterials()">
+                    <option value="">-- Select Type --</option>
+                    <option value="board">Board Ceiling (POP, Gyproc, etc.)</option>
+                    <option value="grid">Grid Ceiling (2x2 Tiles)</option>
+                    <option value="both">Both (Board + Grid)</option>
+                </select>
+            </div>
+            <div class="form-group" id="materialContainer" style="display: none;">
+                <label>Select Main Material</label>
+                <select id="mainMaterial"></select>
+            </div>
+            <div class="form-group" id="materialContainerBoard" style="display: none;">
+                <label>Select Board Main Material</label>
+                <select id="mainMaterialBoard"></select>
+            </div>
+            <div class="form-group" id="materialContainerGrid" style="display: none;">
+                <label>Select Grid Main Material</label>
+                <select id="mainMaterialGrid"></select>
+            </div>
+        </div>
+
+        <div id="boardFraming" style="display: none;">
+            <div class="section-title">4. Framing Selection</div>
+            <div class="row">
+                <div class="form-group">
+                    <label>Intermediate (Inter)</label>
+                    <select id="boardInter"></select>
+                </div>
+                <div class="form-group">
+                    <label>Section</label>
+                    <select id="boardSection"></select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label>Perimeter Angle (L)</label>
+                    <select id="boardL"></select>
+                </div>
+                <div class="form-group">
+                    <label>Paramiter</label>
+                    <select id="boardParamiter"></select>
+                </div>
+            </div>
+        </div>
+
+        <div id="gridFraming" style="display: none;">
+            <div class="section-title">4. Grid Framing Selection</div>
+            <div class="row">
+                <div class="form-group">
+                    <label>Tile Size</label>
+                    <input type="text" id="gridTileSize" value='24" x 24"' placeholder='24" x 24"'>
+                </div>
+                <div class="form-group">
+                    <label>Ceiling Drop (Inches)</label>
+                    <input type="number" id="gridDrop" value="27" min="0" step="0.5">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label>Perimeter Trim Size (Ft)</label>
+                    <input type="number" id="gridTrimSize" value="10" min="1" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label>Main T Bar Length (Ft)</label>
+                    <input type="number" id="gridMainTLength" value="12" min="1" step="0.1">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label>Ceiling Length A</label>
+                    <input type="number" id="gridLengthA" placeholder="18" min="1" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Ceiling Length B</label>
+                    <input type="number" id="gridLengthB" placeholder="16" min="1" step="0.01">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label>Main T</label>
+                    <select id="gridMainT"></select>
+                </div>
+                <div class="form-group">
+                    <label>4ft Cross T</label>
+                    <select id="gridCrossT4"></select>
+                </div>
+                <div class="form-group">
+                    <label>2ft Cross T</label>
+                    <select id="gridCrossT2"></select>
+                </div>
+                <div class="form-group">
+                    <label>Wall Angle (L)</label>
+                    <select id="gridL"></select>
+                </div>
+            </div>
+            <div class="area-breakdown" id="gridCalcSummary"></div>
+        </div>
+
+        <div class="btn-group">
+            <button class="action-btn" id="generateBtn" onclick="generateQuotation()">Generate Bill / Quotation</button>
+            <button class="action-btn print-btn" id="printBtn" onclick="window.print()">Print / Save PDF</button>
+        </div>
+    </div>
+
+    <div class="invoice-box" id="invoiceBox">
+        <div class="invoice-content">
+            <div class="inv-header">
+                <img class="inv-brand" src="Screenshot 2026-04-26 174934.png" alt="Aman Gypsum World logo">
+                <h1>Aman Gypsum World</h1>
+                <p>Wholesale & Retailer of Gypsum Boards, Plaster, Grid Ceilings & Accessories</p>
+                <p>Ahmedabad, Gujarat</p>
+            </div>
+            
+            <div class="inv-details">
+                <div>
+                    <strong>Billed To:</strong><br>
+                    Name: <span id="invName">N/A</span><br>
+                    Contact: <span id="invPhone">N/A</span><br>
+                    Project Area: <span id="invArea">0</span> Sq.Ft (Perimeter: <span id="invPeri">0</span> Ft)
+                </div>
+                <div style="text-align: right;">
+                    <strong>Quotation / Estimate</strong><br>
+                    Date: <span id="invDate">N/A</span><br>
+                    Wastage Est: <span id="invWastage">0</span>%
+                </div>
+            </div>
+
+            <table class="inv-table">
+                <thead>
+                    <tr>
+                        <th style="width: 5%;">#</th>
+                        <th style="width: 50%;">Item Description</th>
+                        <th style="width: 15%;">Qty</th>
+                        <th style="width: 15%;">Rate (₹)</th>
+                        <th style="width: 15%;">Amount (₹)</th>
+                    </tr>
+                </thead>
+                <tbody id="invoiceTableBody">
+                    </tbody>
+                <tfoot>
+                    <tr class="total-row">
+                        <th colspan="4">Grand Total:</th>
+                        <td id="invTotal">₹0</td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <div class="inv-footer">
+                <div>
+                    <strong>Terms & Conditions:</strong><br>
+                    1. This is a material estimate based on provided dimensions.<br>
+                    2. Actual quantities may vary slightly during site installation.<br>
+                    3. Transportation and Labor charges are extra as applicable.
+                </div>
+                <div>
+                    <br><br>
+                    <div class="inv-sign">Authorized Signatory</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="priceSection" style="display: none;">
+        <div class="search-bar">
+            <input type="text" id="priceSearch" onkeyup="filterPrices()" placeholder="Search any item (e.g. Screw, Gyproc, 8ft)...">
+        </div>
+        <div class="table-wrapper">
+            <table class="viewer-table">
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Category</th>
+                        <th style="width: 60%;">Item Description</th>
+                        <th style="width: 20%;">Price (₹)</th>
+                    </tr>
+                </thead>
+                <tbody id="priceTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const numberFormatter = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2 });
+    const currencyFormatter = new Intl.NumberFormat('en-IN', {
+        style: 'currency',
+        currency: 'INR',
+        maximumFractionDigits: 0
+    });
+
+    // COMPLETE DATABASE FROM ALL IMAGES
+    const allItems = [
+        // BOARDS & SHEETS
+        { cat: "Board", name: "Gyproc board 12.5mm (6x4)", price: 490, cover: 24 },
+        { cat: "Board", name: "GYPblock board (6x4)", price: 390, cover: 24 },
+        { cat: "Board", name: "MR dampline board (6x4)", price: 650, cover: 24 },
+        { cat: "Board", name: "GYproc mr board", price: 930, cover: 24 },
+        { cat: "Board", name: "ferroli board (6x4)", price: 360, cover: 24 },
+        { cat: "Board", name: "full tone acoustic board (6x4)", price: 950, cover: 24 },
+        { cat: "Board", name: "full tone 2x2", price: 135, cover: 4 },
+        { cat: "Board", name: "pop sheet 3x3", price: 75, cover: 9 },
+        { cat: "Board", name: "pop sheet 3x3x12mm", price: 80, cover: 9 },
+        { cat: "Board", name: "Sheet 3x3 11mm", price: 75, cover: 9 },
+        { cat: "Board", name: "Sheet 3x3 12mm", price: 80, cover: 9 },
+        { cat: "Board", name: "FR board", price: 860, cover: 24 },
+        
+        // GRID TILES
+        { cat: "Grid Tiles", name: "evest dimond tiles (2x2 ft)", price: 75, cover: 4 },
+        { cat: "Grid Tiles", name: "7mm gypsum laminted tiles (2x2 ft)", price: 72, cover: 4 },
+        { cat: "Grid Tiles", name: "Oceinic /lake and hill tiles (2x2 ft)", price: 75, cover: 4 },
+        { cat: "Grid Tiles", name: "plain primer tiles (2x2 ft)", price: 60, cover: 4 },
+        { cat: "Grid Tiles", name: "mineral fibe tiles 12mm pinhole", price: 1600, cover: 4 },
+        { cat: "Grid Tiles", name: "gyproc 8mm 975 (2x2 ft)", price: 950, cover: 4 },
+
+        // CEMENT / OTHER SHEETS
+        { cat: "Cement/Other Sheets", name: "cement sheet 6x4 8mm", price: 600 },
+        { cat: "Cement/Other Sheets", name: "cement sheet 8x4 8mm", price: 830 },
+        { cat: "Cement/Other Sheets", name: "cement board 8x4x12mm", price: 1250 },
+        { cat: "Cement/Other Sheets", name: "hilux 8mm 6x4 rate", price: 770 },
+        { cat: "Cement/Other Sheets", name: "cemet sheet 12mmx6x4ft", price: 900 },
+        { cat: "Cement/Other Sheets", name: "hilux 12mm 8x4", price: 1500 },
+        { cat: "Cement/Other Sheets", name: "everest cement planks", price: 275 },
+        { cat: "Cement/Other Sheets", name: "4mm florguard", price: 130 },
+        { cat: "Cement/Other Sheets", name: "2mm buble guard", price: 65 },
+        { cat: "Cement/Other Sheets", name: "3mm buble guard", price: 90 },
+
+        // PLASTER & COMPOUNDS
+        { cat: "Plaster & Compound", name: "sakarni 20kg", price: 190 },
+        { cat: "Plaster & Compound", name: "Aman plaster 18kg", price: 160 },
+        { cat: "Plaster & Compound", name: "xpert plaster 20kg", price: 215 },
+        { cat: "Plaster & Compound", name: "xpert plus plaster 20kg", price: 230 },
+        { cat: "Plaster & Compound", name: "25kg gyproc compound", price: 900 },
+        { cat: "Plaster & Compound", name: "20 kg esy fill compound", price: 650 },
+        { cat: "Plaster & Compound", name: "super fine 17kg", price: 110 },
+        { cat: "Plaster & Compound", name: "20kg bond it", price: 3300 },
+        { cat: "Plaster & Compound", name: "febicoal 1kg", price: 100 },
+
+        // INSULATION
+        { cat: "Insulation", name: "glasswool 16kgx50mm (roll)", price: 4000 },
+        { cat: "Insulation", name: "rock wool 50mm x40kg (slab)", price: 1900 },
+        { cat: "Insulation", name: "galsswool 24kgx50mm (roll)", price: 5700 },
+
+        // FRAMING (INTER)
+        { cat: "Frame (Inter)", name: "ultra intermidiate 0.50mmx8ft awg", price: 70 },
+        { cat: "Frame (Inter)", name: "AGW ultra regular intermidiate 12ft", price: 110 },
+        { cat: "Frame (Inter)", name: "AGW + inter (0.70)mm 12ft", price: 140 },
+        { cat: "Frame (Inter)", name: "xpert intermidiate 12ft", price: 195 },
+        { cat: "Frame (Inter)", name: "Gypframe truesteel inter 12ft", price: 280 },
+        { cat: "Frame (Inter)", name: "gypshera inter 12ft", price: 480 },
+        { cat: "Frame (Inter)", name: "golden rate xpert local inter", price: 125 },
+        { cat: "Frame (Inter)", name: "ksf 12 ft inter", price: 110 },
+
+        // FRAMING (SECTION)
+        { cat: "Frame (Section)", name: "ultra section 0.40mmx8ft", price: 75 },
+        { cat: "Frame (Section)", name: "AGW ultra regular section 12ft", price: 110 },
+        { cat: "Frame (Section)", name: "AGW+ section(0.45)mm 12ft", price: 145 },
+        { cat: "Frame (Section)", name: "xpert section 12ft", price: 195 },
+        { cat: "Frame (Section)", name: "gypframe truesteel section 12ft", price: 290 },
+        { cat: "Frame (Section)", name: "gypshera section 12ft", price: 480 },
+        { cat: "Frame (Section)", name: "golden rate xpert local section", price: 125 },
+        { cat: "Frame (Section)", name: "kfs section 12ft", price: 115 },
+
+        // FRAMING (BOTTOM/PATI)
+        { cat: "Frame (Bottom)", name: "ultra para 8 ft 0.40mm", price: 55 },
+        { cat: "Frame (Bottom)", name: "kfs gypsum 8ft bottam", price: 70 },
+        { cat: "Frame (Bottom)", name: "kfs gypsum pati 8ft", price: 75 },
+        { cat: "Frame (Bottom)", name: "7kg bottam 8ft (0.40mm)", price: 56 },
+        { cat: "Frame (Bottom)", name: "7kg pati 8ft(0.40mm)", price: 56 },
+        { cat: "Frame (Bottom)", name: "8kg bottam (0.45mm) 8ft", price: 65 },
+        { cat: "Frame (Bottom)", name: "8kg pati (0.45mm) 8ft", price: 65 },
+        { cat: "Frame (Bottom)", name: "power coated bottam 8ft", price: 75 },
+        { cat: "Frame (Bottom)", name: "power coated pati 8ft", price: 80 },
+
+        // FRAMING (L ANGLE / PERIMETER)
+        { cat: "Frame (L Angle)", name: "ksf 8ft paramiter", price: 55 },
+        { cat: "Frame (L Angle)", name: "7kg wall angle (L) 8ft", price: 32 },
+        { cat: "Frame (L Angle)", name: "powder coated L 8ft", price: 35 },
+        { cat: "Frame (L Angle)", name: "powe coated 8ft paramiter", price: 58 },
+        { cat: "Frame (L Angle)", name: "GI peremiter ultra regular 12ft", price: 80 },
+        { cat: "Frame (L Angle)", name: "AGW+ paramiter(0.45)mm 12ft", price: 90 },
+        { cat: "Frame (L Angle)", name: "xpert paramiter 12ft", price: 140 },
+        { cat: "Frame (L Angle)", name: "xpert ceiling anlge 12ft", price: 85 },
+        { cat: "Frame (L Angle)", name: "GYPframe truestee paramiter 12ft", price: 190 },
+        { cat: "Frame (L Angle)", name: "gypframe true steel agnle 12ft", price: 95 },
+        { cat: "Frame (L Angle)", name: "gypshera paramiter 12ft", price: 295 },
+        { cat: "Frame (L Angle)", name: "gypshera L 12ft", price: 170 },
+        { cat: "Frame (L Angle)", name: "perimiter golden", price: 85 },
+        { cat: "Frame (L Angle)", name: "ceiling anlge golden", price: 35 },
+        { cat: "Frame (L Angle)", name: "kfs paramiter 12ft", price: 85 },
+        { cat: "Frame (L Angle)", name: "cieling wall angle 8ft", price: 32 },
+
+        // STUDS
+        { cat: "Frame (Stud)", name: "GI stud (0.48x.0.50mm) 8ft", price: 115 },
+        { cat: "Frame (Stud)", name: "GI flor (0.48x.50mm) 8ft", price: 110 },
+        { cat: "Frame (Stud)", name: "GI stud (0.48x.0.50mm) 12ft", price: 160 },
+        { cat: "Frame (Stud)", name: "GI flor (0.48x.50mm) 12ft", price: 150 },
+
+        // GRID FRAMING
+        { cat: "Grid Frame", name: "GI ceiling 12ft", price: 50 },
+        { cat: "Grid Frame", name: "CB MT grid 10ft or plain 24mm", price: 70 },
+        { cat: "Grid Frame", name: "2ft cross", price: 14 },
+        { cat: "Grid Frame", name: "4ft cross", price: 28 },
+        { cat: "Grid Frame", name: "wall anlge 10ft", price: 60 },
+
+        // WIRE & JALI
+        { cat: "Jali & Wire", name: "chiken max jali sakarni", price: 1500 },
+        { cat: "Jali & Wire", name: "sada jali 22x5", price: 1800 },
+        { cat: "Jali & Wire", name: "wisher jali 1pkt", price: 100 },
+        { cat: "Jali & Wire", name: "gi wire 1kg", price: 150 },
+
+        // TAPE & HARDWARE (FASTENERS, SCREWS)
+        { cat: "Hardware", name: "gyproc joint tape 1 roll", price: 230 },
+        { cat: "Hardware", name: "Regular joit tape 1 roll", price: 100 },
+        { cat: "Hardware", name: "cello tape 1 roll", price: 50 },
+        { cat: "Hardware", name: "coulor 1 pkt", price: 40 },
+        { cat: "Hardware", name: "line dori", price: 10 },
+        { cat: "Hardware", name: "Hulamma with dori", price: 120 },
+        { cat: "Hardware", name: "connecting clips 1 pkt", price: 250 },
+        { cat: "Hardware", name: "star screw 1,1.5,2,inches", price: 200 },
+        { cat: "Hardware", name: "coach boalt 150", price: 100 },
+        { cat: "Hardware", name: "gyproc screw 1 box", price: 550 },
+        { cat: "Hardware", name: "gyproc rawl plug 1 box", price: 1250 },
+        { cat: "Hardware", name: "soffit clit gyproc 1 box", price: 450 },
+        { cat: "Hardware", name: "nut bolt gyproc 1 box", price: 1450 },
+        { cat: "Hardware", name: "gyproc metal screw 1 box", price: 600 },
+        { cat: "Hardware", name: "gyproc 20 kg doll", price: 1000 },
+        { cat: "Hardware", name: "usg doll 30 kg", price: 1400 },
+        { cat: "Hardware", name: "usg 5kg doll", price: 300 },
+        { cat: "Hardware", name: "fasnter all three types", price: 300 },
+        { cat: "Hardware", name: "khili (400gm)", price: 50 },
+        { cat: "Hardware", name: "black pani 450sqft", price: 300 },
+        { cat: "Hardware", name: "white panii", price: 600 },
+        { cat: "Hardware", name: "small size screw 550gm", price: 150 },
+        { cat: "Hardware", name: "Hilux screw 1 pkt", price: 250 },
+        { cat: "Hardware", name: "metal screw local", price: 250 },
+        { cat: "Hardware", name: "Rawlpulg (pvc gitti)", price: 40 },
+        { cat: "Hardware", name: "butterfly", price: 700 },
+        { cat: "Hardware", name: "35x8 wood screws", price: 120 },
+        { cat: "Hardware", name: "50x8 wood screws", price: 150 },
+        { cat: "Hardware", name: "GI rod 8ft", price: 40 },
+        { cat: "Hardware", name: "star screw small pkt", price: 150 },
+
+        // TOOLS
+        { cat: "Tools", name: "hathaudi", price: 120 },
+        { cat: "Tools", name: "5mte mesurtape", price: 100 },
+        { cat: "Tools", name: "3mter measure", price: 50 },
+        { cat: "Tools", name: "fastner T pana", price: 100 },
+        { cat: "Tools", name: "Grinder pana", price: 100 },
+        { cat: "Tools", name: "Guru mala", price: 50 },
+        { cat: "Tools", name: "Star bit", price: 30 },
+        { cat: "Tools", name: "8mm hammer pana", price: 60 },
+        { cat: "Tools", name: "6mm hammer pana", price: 50 },
+        { cat: "Tools", name: "Screw driver", price: 100 },
+        { cat: "Tools", name: "Level pipe RFT", price: 3.5 },
+        { cat: "Tools", name: "knife", price: 30 },
+
+        // MISC
+        { cat: "Misc", name: "600x600 trapdoor", price: 2800 },
+        { cat: "Misc", name: "paking bada bondle", price: 100 },
+        { cat: "Misc", name: "kanchi choti", price: 50 },
+        { cat: "Misc", name: "kachni bada", price: 120 },
+        { cat: "Misc", name: "patra bada", price: 30 },
+        { cat: "Misc", name: "Small size patra", price: 10 },
+        { cat: "Misc", name: "ghoda 6ft", price: 900 },
+        { cat: "Misc", name: "ghoda 8ft", price: 1000 },
+        { cat: "Misc", name: "fall", price: 1000 }
+    ];
+
+    function populatePriceTable() {
+        const tbody = document.getElementById('priceTableBody');
+        tbody.innerHTML = '';
+        allItems.forEach(item => {
+            let tr = document.createElement('tr');
+            tr.innerHTML = `<td><span class="category-badge">${item.cat}</span></td>
+                            <td style="font-weight:500;">${item.name}</td>
+                            <td style="color:#27ae60; font-weight:bold;">${currencyFormatter.format(item.price)}</td>`;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function populateDropdowns() {
+        const fillByCategory = (id, category, placeholder) => {
+            const el = document.getElementById(id);
+            if(!el) return;
+            el.innerHTML = '';
+            el.add(new Option(placeholder, ''));
+            allItems.filter(i => i.cat === category).forEach((i, idx) => {
+                el.add(new Option(`${i.name} - ₹${i.price}`, i.price + '|' + i.name));
+            });
+        };
+
+        const fillByFilter = (id, category, matcher, placeholder) => {
+            const el = document.getElementById(id);
+            if(!el) return;
+            el.innerHTML = '';
+            el.add(new Option(placeholder, ''));
+            allItems
+                .filter(i => i.cat === category && matcher(i.name.toLowerCase()))
+                .forEach(i => el.add(new Option(`${i.name} - ₹${i.price}`, i.price + '|' + i.name)));
+        };
+
+        const fillMerged = (id, placeholder, sources) => {
+            const el = document.getElementById(id);
+            if(!el) return;
+            el.innerHTML = '';
+            el.add(new Option(placeholder, ''));
+            sources.forEach(source => {
+                allItems
+                    .filter(item => item.cat === source.category && source.matcher(item.name.toLowerCase()))
+                    .forEach(item => el.add(new Option(`${item.name} - ₹${item.price}`, item.price + '|' + item.name)));
+            });
+        };
+
+        fillMerged('boardInter', '-- Select Inter Frame --', [
+            { category: 'Frame (Inter)', matcher: () => true },
+            { category: 'Frame (Bottom)', matcher: (name) => /bottom|para/.test(name) }
+        ]);
+
+        fillMerged('boardSection', '-- Select Section Frame --', [
+            { category: 'Frame (Section)', matcher: () => true },
+            { category: 'Frame (Bottom)', matcher: (name) => /pati/.test(name) }
+        ]);
+
+        fillByFilter('boardL', 'Frame (L Angle)', (name) => /l\b|wall angle|ceiling angle/.test(name), '-- Select L Angle --');
+        fillByFilter('boardParamiter', 'Frame (L Angle)', (name) => /paramiter|peremiter/.test(name), '-- Select Paramiter --');
+
+        fillByFilter('gridMainT', 'Grid Frame', (name) => /main|mt|ceiling/.test(name), '-- Select Main T --');
+        fillByFilter('gridCrossT4', 'Grid Frame', (name) => /4ft|4 ft/.test(name), '-- Select 4ft Cross T --');
+        fillByFilter('gridCrossT2', 'Grid Frame', (name) => /2ft|2 ft/.test(name), '-- Select 2ft Cross T --');
+        fillByFilter('gridL', 'Grid Frame', (name) => /wall|angle/.test(name), '-- Select Wall Angle --');
+    }
+
+    function fillMainMaterialSelect(selectId, category, placeholder) {
+        const select = document.getElementById(selectId);
+        if (!select) return;
+        select.innerHTML = '';
+        select.add(new Option(placeholder, ''));
+        allItems.forEach((item, index) => {
+            if (item.cat === category && item.cover) {
+                select.add(new Option(`${item.name} - ₹${item.price}`, index));
+            }
+        });
+    }
+
+    function switchTab(tab) {
+        document.getElementById('calcSection').style.display = tab === 'calc' ? 'block' : 'none';
+        document.getElementById('priceSection').style.display = tab === 'price' ? 'block' : 'none';
+        document.getElementById('tabCalc').classList.toggle('active', tab === 'calc');
+        document.getElementById('tabPrice').classList.toggle('active', tab === 'price');
+    }
+
+    function filterPrices() {
+        let input = document.getElementById('priceSearch').value.toLowerCase();
+        let rows = document.querySelectorAll('#priceTableBody tr');
+        rows.forEach(row => { row.style.display = row.innerText.toLowerCase().includes(input) ? '' : 'none'; });
+    }
+
+    function calculateArea() {
+        const type = document.getElementById('ceilingType').value;
+        const readAreaPerimeter = (lengthId, widthId) => {
+            const length = parseFloat(document.getElementById(lengthId).value) || 0;
+            const width = parseFloat(document.getElementById(widthId).value) || 0;
+            return {
+                area: length * width,
+                perimeter: 2 * (length + width)
+            };
+        };
+
+        let area = 0;
+        let perimeter = 0;
+
+        if (type === 'both') {
+            const board = readAreaPerimeter('boardLength', 'boardWidth');
+            const grid = readAreaPerimeter('gridLengthA', 'gridLengthB');
+            area = board.area + grid.area;
+            perimeter = board.perimeter + grid.perimeter;
+            document.getElementById('areaBreakdown').innerText = `Board: ${numberFormatter.format(board.area)} Sq.Ft | Grid: ${numberFormatter.format(grid.area)} Sq.Ft`;
+        } else if (type === 'grid') {
+            const grid = readAreaPerimeter('gridLengthA', 'gridLengthB');
+            area = grid.area;
+            perimeter = grid.perimeter;
+            document.getElementById('areaBreakdown').innerText = `Grid: ${numberFormatter.format(grid.area)} Sq.Ft`;
+        } else {
+            const common = readAreaPerimeter('length', 'width');
+            area = common.area;
+            perimeter = common.perimeter;
+            document.getElementById('areaBreakdown').innerText = '';
+        }
+
+        const wastageVal = parseFloat(document.getElementById('wastage').value) || 0;
+        const effectiveArea = area * (1 + (wastageVal / 100));
+
+        document.getElementById('totalArea').value = area ? area.toFixed(2) : '';
+        document.getElementById('areaStat').innerText = `${numberFormatter.format(area)} Sq.Ft`;
+        document.getElementById('periStat').innerText = `${numberFormatter.format(perimeter)} Ft`;
+        document.getElementById('effectiveAreaStat').innerText = `${numberFormatter.format(effectiveArea)} Sq.Ft`;
+
+        if (type === 'grid' || type === 'both') {
+            const gridLengthA = parseFloat(document.getElementById('gridLengthA').value) || 0;
+            const gridLengthB = parseFloat(document.getElementById('gridLengthB').value) || 0;
+            const gridDrop = parseFloat(document.getElementById('gridDrop').value) || 0;
+            const gridTrimSize = parseFloat(document.getElementById('gridTrimSize').value) || 1;
+            const gridTileSize = document.getElementById('gridTileSize').value;
+            const gridMainTLength = parseFloat(document.getElementById('gridMainTLength').value) || 12;
+            const gridSummary = calculateGridSummary(gridLengthA, gridLengthB, gridDrop, gridTrimSize, gridTileSize, gridMainTLength);
+            document.getElementById('gridCalcSummary').innerText = gridSummary.text;
+        } else {
+            document.getElementById('gridCalcSummary').innerText = '';
+        }
+    }
+
+    function calculateGridSummary(lengthA, lengthB, dropInches, trimSizeFt, tileSizeText, mainTLengthFt) {
+        const area = lengthA * lengthB;
+        const perimeter = 2 * (lengthA + lengthB);
+        const tileSideMatch = String(tileSizeText || '').match(/\d+(?:\.\d+)?/g);
+        const tileSideInches = tileSideMatch && tileSideMatch.length ? parseFloat(tileSideMatch[0]) : 24;
+        const tileArea = Math.pow(tileSideInches / 12, 2);
+        const tilesNeeded = Math.ceil(area / tileArea);
+        const perimeterTrimNeeded = Math.max(1, Math.ceil(perimeter / trimSizeFt) - 1);
+        const mainTBarsNeeded = Math.ceil(lengthA / 4);
+        const fourFootTsNeeded = Math.ceil((Math.ceil(lengthA / 2) - 1) * Math.ceil(lengthB / 4));
+        const twoFootTsNeeded = Math.ceil(lengthA / 2) * Math.ceil(lengthB / 8);
+        const tieWireAnchors = twoFootTsNeeded;
+        const tieWireFeet = tieWireAnchors * (dropInches / 12);
+
+        return {
+            area,
+            perimeter,
+            tilesNeeded,
+            perimeterTrimNeeded,
+            mainTBarsNeeded,
+            fourFootTsNeeded,
+            twoFootTsNeeded,
+            tieWireAnchors,
+            tieWireFeet,
+            text: `Grid Ref: Perimeter ${numberFormatter.format(perimeter)} Ft | Area ${numberFormatter.format(area)} Sq.Ft | Tile ${tileSideInches}" | Tiles ${tilesNeeded} | Trim ${perimeterTrimNeeded} x ${mainTLengthFt}Ft | Main T ${mainTBarsNeeded} x ${mainTLengthFt}Ft | 4ft T ${fourFootTsNeeded} | 2ft T ${twoFootTsNeeded} | Anchors ${tieWireAnchors} | Tie Wire ${numberFormatter.format(tieWireFeet)} Ft`
+        };
+    }
+
+    function updateMaterials() {
+        const type = document.getElementById('ceilingType').value;
+        const matSelect = document.getElementById('mainMaterial');
+        const matBoard = document.getElementById('mainMaterialBoard');
+        const matGrid = document.getElementById('mainMaterialGrid');
+        
+        matSelect.innerHTML = '';
+        matBoard.innerHTML = '';
+        matGrid.innerHTML = '';
+
+        document.getElementById('singleDimensionsRow').style.display = type === 'board' ? 'flex' : 'none';
+        document.getElementById('bothDimensionsRow').style.display = type === 'both' ? 'block' : 'none';
+        document.getElementById('materialContainer').style.display = (type === 'board' || type === 'grid') ? 'block' : 'none';
+        document.getElementById('materialContainerBoard').style.display = type === 'both' ? 'block' : 'none';
+        document.getElementById('materialContainerGrid').style.display = type === 'both' ? 'block' : 'none';
+        document.getElementById('boardFraming').style.display = (type === 'board' || type === 'both') ? 'block' : 'none';
+        document.getElementById('gridFraming').style.display = (type === 'grid' || type === 'both') ? 'block' : 'none';
+        
+        if (type === 'board') {
+            fillMainMaterialSelect('mainMaterial', 'Board', '-- Select Main Material --');
+        }
+        if (type === 'grid') {
+            fillMainMaterialSelect('mainMaterial', 'Grid Tiles', '-- Select Main Material --');
+        }
+        if (type === 'both') {
+            fillMainMaterialSelect('mainMaterialBoard', 'Board', '-- Select Board Material --');
+            fillMainMaterialSelect('mainMaterialGrid', 'Grid Tiles', '-- Select Grid Material --');
+        }
+
+        calculateArea();
+    }
+
+    function parseSelect(id) {
+        const val = document.getElementById(id).value;
+        if(!val) return {name: '', price: 0};
+        const parts = val.split('|');
+        return { price: parseFloat(parts[0]), name: parts[1] };
+    }
+
+    function generateQuotation() {
+        const type = document.getElementById('ceilingType').value;
+        const wastageVal = parseFloat(document.getElementById('wastage').value) || 0;
+        const wFactor = 1 + (wastageVal / 100);
+        const dim = (lengthId, widthId) => {
+            const length = parseFloat(document.getElementById(lengthId).value) || 0;
+            const width = parseFloat(document.getElementById(widthId).value) || 0;
+            return {
+                area: length * width,
+                perimeter: 2 * (length + width)
+            };
+        };
+
+        const boardDims = type === 'both' ? dim('boardLength', 'boardWidth') : dim('length', 'width');
+        const gridDims = dim('gridLengthA', 'gridLengthB');
+        const area = type === 'both' ? boardDims.area + gridDims.area : type === 'grid' ? gridDims.area : boardDims.area;
+        const perimeter = type === 'both' ? boardDims.perimeter + gridDims.perimeter : type === 'grid' ? gridDims.perimeter : boardDims.perimeter;
+
+        if (!area || area <= 0) return alert("Please enter valid room dimensions.");
+        if (!type) return alert("Please select a ceiling type.");
+        if (type === 'both' && (!boardDims.area || !gridDims.area)) {
+            return alert("Please enter both board and grid dimensions.");
+        }
+
+        // Setup Invoice Details
+        document.getElementById('invName').innerText = document.getElementById('custName').value || 'Cash / Walk-in';
+        document.getElementById('invPhone').innerText = document.getElementById('custPhone').value || '-';
+        document.getElementById('invDate').innerText = document.getElementById('billDate').value;
+        document.getElementById('invArea').innerText = numberFormatter.format(area);
+        document.getElementById('invPeri').innerText = numberFormatter.format(perimeter);
+        document.getElementById('invWastage').innerText = wastageVal;
+
+        const gridLengthA = parseFloat(document.getElementById('gridLengthA').value) || 0;
+        const gridLengthB = parseFloat(document.getElementById('gridLengthB').value) || 0;
+        const gridDrop = parseFloat(document.getElementById('gridDrop').value) || 0;
+        const gridTrimSize = parseFloat(document.getElementById('gridTrimSize').value) || 1;
+        const gridTileSize = document.getElementById('gridTileSize').value;
+        const gridMainTLength = parseFloat(document.getElementById('gridMainTLength').value) || 12;
+        const gridSummary = calculateGridSummary(gridLengthA, gridLengthB, gridDrop, gridTrimSize, gridTileSize, gridMainTLength);
+
+        let sNo = 1;
+        let grandTotal = 0;
+        let rowsHTML = '';
+
+        function addRow(name, qty, rate) {
+            if (!name || !rate || qty <= 0) return;
+            let amount = qty * rate;
+            grandTotal += amount;
+            rowsHTML += `<tr>
+                <td>${sNo++}</td>
+                <td>${name}</td>
+                <td class="num">${qty}</td>
+                <td class="num">${numberFormatter.format(rate)}</td>
+                <td class="num">${numberFormatter.format(amount)}</td>
+            </tr>`;
+        }
+
+        const addMainMaterialRow = (selectId, areaVal) => {
+            const selectedValue = document.getElementById(selectId).value;
+            if (!selectedValue) return false;
+            const selectedMat = allItems[Number(selectedValue)];
+            if (!selectedMat || !selectedMat.cover) return false;
+            addRow(selectedMat.name, Math.ceil((areaVal / selectedMat.cover) * wFactor), selectedMat.price);
+            return true;
+        };
+
+        const addBoardRows = (areaVal, perimeterVal) => {
+            let i = parseSelect('boardInter'); addRow(i.name, Math.ceil((areaVal / 32) * wFactor), i.price);
+            let s = parseSelect('boardSection'); addRow(s.name, Math.ceil((areaVal / 18) * wFactor), s.price);
+            let l = parseSelect('boardL'); addRow(l.name, Math.ceil((perimeterVal / 12) * wFactor), l.price);
+            let p = parseSelect('boardParamiter'); addRow(p.name, Math.ceil((perimeterVal / 12) * wFactor), p.price);
+        };
+
+        const addGridRows = (summary) => {
+            let mt = parseSelect('gridMainT'); addRow(mt.name, Math.ceil(summary.mainTBarsNeeded * wFactor), mt.price);
+            let ct4 = parseSelect('gridCrossT4'); addRow(ct4.name, Math.ceil(summary.fourFootTsNeeded * wFactor), ct4.price);
+            let ct2 = parseSelect('gridCrossT2'); addRow(ct2.name, Math.ceil(summary.twoFootTsNeeded * wFactor), ct2.price);
+            let gl = parseSelect('gridL'); addRow(gl.name, Math.ceil(summary.perimeterTrimNeeded * wFactor), gl.price);
+        };
+
+        // 1. Add Main Material(s)
+        if (type === 'board') {
+            if (!addMainMaterialRow('mainMaterial', area)) {
+                return alert("Please select the main material.");
+            }
+            addBoardRows(area, perimeter);
+        } else if (type === 'grid') {
+            if (!addMainMaterialRow('mainMaterial', gridDims.area)) {
+                return alert("Please select the main material.");
+            }
+            addGridRows(gridSummary);
+        } else if (type === 'both') {
+            if (!addMainMaterialRow('mainMaterialBoard', boardDims.area)) {
+                return alert("Please select board main material.");
+            }
+            if (!addMainMaterialRow('mainMaterialGrid', gridDims.area)) {
+                return alert("Please select grid main material.");
+            }
+            addBoardRows(boardDims.area, boardDims.perimeter);
+            addGridRows(gridSummary);
+        }
+
+        // 3. Hardware Lump Sum
+        const hwCost = Math.round((area * 15) * wFactor);
+        rowsHTML += `<tr>
+            <td>${sNo++}</td>
+            <td>Hardware Kit (Est. Screws, Tape, Wire, Plaster)</td>
+            <td class="num">1</td>
+            <td class="num">${numberFormatter.format(hwCost)}</td>
+            <td class="num">${numberFormatter.format(hwCost)}</td>
+        </tr>`;
+        grandTotal += hwCost;
+
+        // Render Table
+        document.getElementById('invoiceTableBody').innerHTML = rowsHTML;
+        document.getElementById('invTotal').innerText = currencyFormatter.format(grandTotal);
+        document.getElementById('invoiceBox').style.display = 'block';
+        document.getElementById('printBtn').style.display = 'block';
+        document.getElementById('invoiceBox').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('billDate').valueAsDate = new Date();
+        populatePriceTable();
+        populateDropdowns();
+        document.getElementById('length').addEventListener('input', calculateArea);
+        document.getElementById('width').addEventListener('input', calculateArea);
+        document.getElementById('boardLength').addEventListener('input', calculateArea);
+        document.getElementById('boardWidth').addEventListener('input', calculateArea);
+        document.getElementById('gridLengthA').addEventListener('input', calculateArea);
+        document.getElementById('gridLengthB').addEventListener('input', calculateArea);
+        document.getElementById('gridDrop').addEventListener('input', calculateArea);
+        document.getElementById('gridTrimSize').addEventListener('input', calculateArea);
+        document.getElementById('wastage').addEventListener('input', calculateArea);
+        updateMaterials();
+        calculateArea();
+    });
+</script>
+
+</body>
+</html>
